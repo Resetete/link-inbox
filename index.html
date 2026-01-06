@@ -1,0 +1,214 @@
+<!-- index.html (v1: no bookmarklet, no #quick handler) -->
+<!doctype html>
+<html lang="en" data-theme="minimal">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Link Inbox — Save for later</title>
+  <meta name="description" content="A simple multilingual link inbox. Save links with notes, tag them, and export/import or share your list." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="topbar__title">
+        <h1 data-i18n="appTitle">Link Inbox</h1>
+        <p class="sub">
+          <span data-i18n="appSubtitle">Save links fast. Tag them. Open & archive.</span>
+          <button id="aboutBtn" class="aboutBtn" type="button" aria-haspopup="dialog" aria-controls="aboutDialog">
+            <span class="aboutBtn__icon" aria-hidden="true">ⓘ</span>
+            <span class="aboutBtn__text" data-i18n="aboutBtn">About</span>
+          </button>
+        </p>
+      </div>
+
+      <div class="topbar__controls">
+        <div class="seg">
+          <label class="seg__label" for="lang" data-i18n="languageLabel">Language</label>
+          <select id="lang" class="seg__select" aria-label="Language">
+            <option value="en">EN</option>
+            <option value="de">DE</option>
+            <option value="pt">PT</option>
+          </select>
+        </div>
+
+        <div class="seg">
+          <label class="seg__label" for="theme" data-i18n="themeLabel">Theme</label>
+          <select id="theme" class="seg__select" aria-label="Theme">
+            <option value="minimal">Minimal</option>
+            <option value="cute">Cute</option>
+            <option value="cozy">Cozy</option>
+            <option value="aurora">Aurora</option>
+            <option value="sunset">Sunset</option>
+            <option value="ocean">Ocean</option>
+            <option value="paper">Paper</option>
+          </select>
+        </div>
+
+        <button class="btn" id="shareBtn" type="button" data-i18n="shareBtn">Share</button>
+        <button class="btn" id="exportBtn" type="button" data-i18n="exportBtn">Export</button>
+
+        <label class="btn btn--file">
+          <input id="importInput" type="file" accept="application/json" />
+          <span data-i18n="importBtn">Import</span>
+        </label>
+      </div>
+    </header>
+
+    <main class="grid">
+      <!-- Add box -->
+      <section class="card" aria-label="Add link">
+        <h2 data-i18n="addTitle">Add a link</h2>
+
+        <div class="field">
+          <label for="url" data-i18n="urlLabel">URL</label>
+          <input id="url" type="url" placeholder="https://…" />
+        </div>
+
+        <div class="field">
+          <label for="note" data-i18n="noteLabel">Note (optional)</label>
+          <input id="note" type="text" placeholder="e.g., Try this recipe next weekend" maxlength="140" />
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="tag" data-i18n="tagLabel">Tag</label>
+            <select id="tag"></select>
+          </div>
+          <button class="btn btn--primary" id="addBtn" type="button" data-i18n="addBtn">Add</button>
+        </div>
+
+        <p class="hint" data-i18n="hint">
+          Tip: paste a link, press Enter to add. Tag is auto-detected — you can change it.
+        </p>
+      </section>
+
+      <!-- List -->
+      <section class="card" aria-label="Your links">
+        <div class="listHeader">
+          <h2 data-i18n="listTitle">Your inbox</h2>
+
+          <div class="listHeader__right">
+            <div class="seg seg--small">
+              <label class="seg__label" for="filter" data-i18n="filterLabel">Filter</label>
+              <select id="filter" class="seg__select" aria-label="Filter"></select>
+            </div>
+
+            <button class="btn" id="clearArchived" type="button" data-i18n="clearArchivedBtn">
+              Clear archived
+            </button>
+          </div>
+        </div>
+
+        <div class="stats">
+          <span class="pill" id="countActive">0</span>
+          <span class="pill pill--muted" id="countArchived">0</span>
+        </div>
+
+        <div class="searchRow">
+          <input id="search" type="search" placeholder="Search…" />
+          <button class="btn" id="toggleArchived" type="button" data-i18n="showArchivedBtn">Show archived</button>
+        </div>
+
+        <div id="list" class="list"></div>
+
+        <p class="empty muted" id="emptyState" hidden data-i18n="emptyState">
+          Nothing here yet — add your first link above.
+        </p>
+      </section>
+    </main>
+
+    <!-- Export modal -->
+    <dialog id="exportDialog" class="dialog">
+      <div class="dialog__head">
+        <strong data-i18n="exportTitle">Export JSON</strong>
+        <button class="btn btn--icon" id="closeExport" type="button" aria-label="Close">✕</button>
+      </div>
+      <p class="muted" data-i18n="exportHelp">Copy this JSON or download it as a file.</p>
+
+      <textarea id="exportText" class="exportText" rows="10" readonly></textarea>
+
+      <div class="dialog__actions">
+        <button class="btn" id="copyExport" type="button" data-i18n="copyBtn">Copy</button>
+        <button class="btn btn--primary" id="downloadExport" type="button" data-i18n="downloadJsonBtn">Download .json</button>
+      </div>
+    </dialog>
+
+    <!-- Share modal -->
+    <dialog id="shareDialog" class="dialog">
+      <div class="dialog__head">
+        <strong data-i18n="shareTitle">Share link</strong>
+        <button class="btn btn--icon" id="closeShare" type="button" aria-label="Close">✕</button>
+      </div>
+      <p class="muted" data-i18n="shareHelp">Send this link to someone. They can import your shared list.</p>
+
+      <textarea id="shareText" class="exportText" rows="6" readonly></textarea>
+
+      <div class="dialog__actions">
+        <button class="btn" id="copyShare" type="button" data-i18n="copyBtn">Copy</button>
+      </div>
+    </dialog>
+
+    <!-- About tool modal -->
+    <dialog id="aboutDialog" class="dialog dialog--about" aria-labelledby="aboutTitle">
+      <div class="dialog__head">
+        <strong id="aboutTitle" data-i18n="aboutTitle">About this tool</strong>
+        <button class="btn btn--icon" id="closeAbout" type="button" aria-label="Close">✕</button>
+      </div>
+
+      <div class="about">
+        <p class="about__lead" data-i18n="aboutLead">
+          Link Inbox is a lightweight place to drop links you don’t want to lose. Save now — decide later.
+        </p>
+
+        <div class="about__grid">
+          <div class="about__card">
+            <div class="about__kicker" data-i18n="aboutCommonTitle">Common uses</div>
+            <ul class="about__list">
+              <li><span aria-hidden="true">🎥</span> <span data-i18n="aboutUseWatch">Videos to watch later</span></li>
+              <li><span aria-hidden="true">📚</span> <span data-i18n="aboutUseRead">Articles to read</span></li>
+              <li><span aria-hidden="true">🛒</span> <span data-i18n="aboutUseBuy">Products to compare or buy</span></li>
+              <li><span aria-hidden="true">💡</span> <span data-i18n="aboutUseIdea">Ideas & inspiration</span></li>
+            </ul>
+          </div>
+
+          <div class="about__card">
+            <div class="about__kicker" data-i18n="aboutHowTitle">How it works</div>
+            <ol class="about__steps">
+              <li data-i18n="aboutStep1">Paste a link. The tag is auto-detected.</li>
+              <li data-i18n="aboutStep2">Add an optional note to remember why you saved it.</li>
+              <li data-i18n="aboutStep3">When you’re done, open it and archive or delete it.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="about__footer">
+          <p class="muted" data-i18n="aboutPrivacy">
+            Everything stays in your browser (local storage). No account, no tracking.
+          </p>
+          <div class="about__actions">
+            <button class="btn btn--primary" id="closeAboutPrimary" type="button" data-i18n="aboutGotItBtn">Got it</button>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Import shared prompt -->
+    <dialog id="importShareDialog" class="dialog">
+      <div class="dialog__head">
+        <strong data-i18n="importShareTitle">Import shared links?</strong>
+        <button class="btn btn--icon" id="closeImportShare" type="button" aria-label="Close">✕</button>
+      </div>
+      <p class="muted" id="importShareInfo"></p>
+
+      <div class="dialog__actions">
+        <button class="btn" id="cancelImportShare" type="button" data-i18n="cancelBtn">Cancel</button>
+        <button class="btn btn--primary" id="confirmImportShare" type="button" data-i18n="importNowBtn">Import</button>
+      </div>
+    </dialog>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
