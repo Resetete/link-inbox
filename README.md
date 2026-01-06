@@ -15,3 +15,7 @@ Paste a link. The tag is auto-detected.
 Add an optional note to remember why you saved it.
 When you’re done, open it and archive or delete it.
 Everything stays in your browser (local storage). No account, no tracking.
+
+
+It's currently available here:
+https://resetete.github.io/link-inbox/
