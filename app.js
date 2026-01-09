@@ -736,7 +736,7 @@ function renderList() {
     link.href = item.url;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
-    link.textContent = item.url;
+    link.textContent = item.url.substring(0,30).concat('...');
 
     titleLine.appendChild(host);
     titleLine.appendChild(link);
