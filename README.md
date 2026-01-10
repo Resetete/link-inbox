@@ -19,3 +19,6 @@ Everything stays in your browser (local storage). No account, no tracking.
 
 It's currently available here:
 https://resetete.github.io/link-inbox/
+
+production:
+https://linksavertool.eu/
