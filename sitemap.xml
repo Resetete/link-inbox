@@ -2,6 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.linksavertool.eu/</loc>
+    <loc>https://www.linksavertool.eu/en/bookmark-alternative</loc>
+    <loc>https://www.linksavertool.eu/de/bookmark-alternative</loc>
+    <loc>https://www.linksavertool.eu/pt/bookmark-alternative</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>

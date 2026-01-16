@@ -523,6 +523,11 @@ html[data-theme="paper"] .dialog{
 .aboutBtn__icon{ font-size: 13px; opacity: .9; }
 .aboutBtn__text{ letter-spacing: .2px; }
 
+/* SEO teaser */
+.seo-teaser {
+  margin-top: 10px;
+}
+
 /* About modal */
 .dialog--about{
   width: min(860px, 94vw);

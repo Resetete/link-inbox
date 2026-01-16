@@ -20,13 +20,13 @@
     <header class="topbar">
       <div class="topbar__title">
         <h1 data-i18n="appTitle">Link Inbox</h1>
-        <p class="sub">
+        <div class="sub">
           <span data-i18n="appSubtitle">Save links fast. Tag them. Open & archive.</span>
           <button id="aboutBtn" class="aboutBtn" type="button" aria-haspopup="dialog" aria-controls="aboutDialog">
             <span class="aboutBtn__icon" aria-hidden="true">ⓘ</span>
             <span class="aboutBtn__text" data-i18n="aboutBtn">About</span>
           </button>
-        </p>
+        </div>
       </div>
 
       <div class="topbar__controls">
@@ -124,6 +124,17 @@
         </p>
       </section>
     </main>
+
+    <!-- SEO teaser -->
+    <section class="seo-teaser" aria-labelledby="bookmarks-h2">
+      <h2 id="bookmarks-h2" data-i18n="appHeaderSubpage">Why bookmarks don’t work anymore</h2>
+      <p data-i18n="appSubpageExplanation">
+        Browser bookmarks get messy fast. Important links disappear. LinkSaverTool works like an inbox for links you want to read later.
+      </p>
+      <a id="seoLink" href="./pages/en/bookmark-alternative.html" data-i18n="appSubpageLink">
+        Read why a link inbox works better than bookmarks
+      </a>
+    </section>
 
     <!-- Export modal -->
     <dialog id="exportDialog" class="dialog">

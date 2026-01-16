@@ -90,6 +90,11 @@ const I18N = {
 
     importShareInfo: (n) =>
       `This share link contains ${n} link(s). Import them into your inbox?`,
+
+    appHeaderSubpage: "Why bookmarks don’t work anymore",
+    appSubpageExplanation:
+      "Browser bookmarks get messy fast. Important links disappear. LinkSaverTool works like an inbox for links you want to read later.",
+    appSubpageLink: "Read why a link inbox works better than bookmarks",
   },
 
   de: {
@@ -106,6 +111,12 @@ const I18N = {
     aboutLead:
       "Link-Inbox ist ein leichter Ort für Links, die du nicht verlieren willst. Jetzt speichern — später entscheiden.",
     aboutCommonTitle: "Typische Nutzung",
+
+    appHeaderSubpage: "Warum Lesezeichen heute nicht mehr funktionieren",
+    appSubpageExplanation:
+      "Browser-Lesezeichen werden schnell unübersichtlich. Wichtige Links gehen verloren oder werden nie wieder geöffnet. Das LinkSaverTool funktioniert wie ein Posteingang für Links, die du später lesen möchtest.",
+    appSubpageLink: "Warum eine Link-Inbox besser ist als Lesezeichen",
+
     aboutUseWatch: "Videos für später",
     aboutUseRead: "Artikel zum Lesen",
     aboutUseBuy: "Produkte vergleichen oder kaufen",
@@ -198,6 +209,13 @@ const I18N = {
     aboutTitle: "Sobre esta ferramenta",
     aboutLead:
       "O Link Inbox é um lugar leve para guardar links que você não quer perder. Salve agora — decida depois.",
+
+    appHeaderSubpage: "Por que os favoritos não funcionam mais hoje em dia",
+    appSubpageExplanation:
+      "Os favoritos do navegador ficam confusos rapidamente. Links importantes acabam esquecidos. O LinkSaverTool funciona como uma caixa de entrada para links que você quer ler depois.",
+    appSubpageLink:
+      "Descubra por que uma caixa de entrada de links funciona melhor que favoritos",
+
     aboutCommonTitle: "Usos comuns",
     aboutUseWatch: "Vídeos para ver depois",
     aboutUseRead: "Artigos para ler",
@@ -385,6 +403,20 @@ function loadState() {
 
 function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+/** ---------- SEO teaser link (language-specific) ---------- **/
+function updateSeoLinkForLang(lang) {
+  const seoLink = document.getElementById("seoLink");
+  if (!seoLink) return;
+
+  const map = {
+    en: "./pages/en/bookmark-alternative.html",
+    de: "./pages/de/bookmark-alternative.html",
+    pt: "./pages/pt/bookmark-alternative.html",
+  };
+
+  seoLink.setAttribute("href", map[lang] || map.en);
 }
 
 /** ---------- Helpers ---------- **/
@@ -647,6 +679,9 @@ function applyI18n() {
 
   renderTagOptions();
   renderFilterOptions();
+
+  // ensure the SEO teaser link matches the selected language
+  updateSeoLinkForLang(state.lang);
 }
 
 function renderTagOptions() {
@@ -736,7 +771,7 @@ function renderList() {
     link.href = item.url;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
-    link.textContent = item.url.substring(0,30).concat('...');
+    link.textContent = item.url.substring(0, 30).concat("...");
 
     titleLine.appendChild(host);
     titleLine.appendChild(link);
@@ -1060,6 +1095,7 @@ els.clearArchived.addEventListener("click", () => {
   renderList();
 });
 
+/** ---------- Export / Import bindings ---------- **/
 els.exportBtn.addEventListener("click", openExport);
 els.closeExport.addEventListener("click", () => closeDialog(els.exportDialog));
 els.downloadExport.addEventListener("click", downloadJson);
@@ -1072,6 +1108,7 @@ els.importInput.addEventListener("change", (e) => {
   if (file) importJsonFile(file);
 });
 
+/** ---------- Share bindings ---------- **/
 els.shareBtn.addEventListener("click", openShareDialog);
 els.closeShare.addEventListener("click", () => closeDialog(els.shareDialog));
 els.copyShare.addEventListener("click", () =>
